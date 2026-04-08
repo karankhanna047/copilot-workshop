@@ -1,0 +1,18 @@
+{
+  "servers": {
+    "github": {
+      "type": "builtin",
+      "description": "Built-in GitHub MCP server. Zero config. Access repos, issues, PRs, and Actions via natural language."
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@anthropic-ai/mcp-server-playwright"],
+      "description": "Browser automation MCP server. Ask Copilot to navigate pages, fill forms, take screenshots."
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "${workspaceFolder}"],
+      "description": "File system MCP server. Read, write, search files via Copilot."
+    }
+  }
+}

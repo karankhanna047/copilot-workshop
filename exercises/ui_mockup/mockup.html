@@ -1,0 +1,177 @@
+<!--
+  EXERCISE: Vision / Screenshot-to-Code
+
+  INSTRUCTIONS FOR PRESENTER:
+  1. Open this HTML file in a browser
+  2. Take a screenshot of the rendered page
+  3. Paste the screenshot into Copilot Chat in VS Code
+  4. Ask: "Generate a React component with Tailwind CSS that matches this dashboard UI"
+  5. Watch Copilot generate the component from the image
+
+  INSTRUCTIONS FOR ATTENDEES:
+  1. Open this file in your browser
+  2. Take a screenshot (Cmd+Shift+4 on Mac, Win+Shift+S on Windows)
+  3. Open Copilot Chat and paste the screenshot
+  4. Ask Copilot to recreate it in your preferred framework
+
+  This demonstrates that Copilot can understand visual layouts and
+  generate matching code.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaskMaster Dashboard Mockup</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f2f5; color: #1a1a2e; }
+    .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px 32px; color: white; display: flex; justify-content: space-between; align-items: center; }
+    .header h1 { font-size: 24px; font-weight: 600; }
+    .header .user { display: flex; align-items: center; gap: 12px; }
+    .header .avatar { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; font-weight: bold; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+    .stat-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .stat-card .label { font-size: 13px; color: #666; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+    .stat-card .value { font-size: 32px; font-weight: 700; }
+    .stat-card .change { font-size: 13px; margin-top: 4px; }
+    .stat-card .change.positive { color: #10b981; }
+    .stat-card .change.negative { color: #ef4444; }
+    .content-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+    .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .card h2 { font-size: 16px; font-weight: 600; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
+    .card h2 .badge { background: #667eea; color: white; font-size: 12px; padding: 2px 8px; border-radius: 12px; }
+    .task-list { list-style: none; }
+    .task-list li { padding: 12px 0; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; gap: 12px; }
+    .task-list li:last-child { border-bottom: none; }
+    .task-list .dot { width: 8px; height: 8px; border-radius: 50%; }
+    .dot.high { background: #ef4444; }
+    .dot.medium { background: #f59e0b; }
+    .dot.low { background: #10b981; }
+    .task-list .title { flex: 1; font-size: 14px; }
+    .task-list .tag { font-size: 11px; padding: 2px 8px; border-radius: 4px; background: #f0f2f5; color: #666; }
+    .task-list .due { font-size: 12px; color: #999; }
+    .progress-bar { height: 8px; background: #f0f0f0; border-radius: 4px; overflow: hidden; margin-top: 8px; }
+    .progress-bar .fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, #667eea, #764ba2); }
+    .team-member { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
+    .team-member:last-child { border-bottom: none; }
+    .team-member .avatar-small { width: 32px; height: 32px; border-radius: 50%; background: #667eea; color: white; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; }
+    .team-member .info { flex: 1; }
+    .team-member .name { font-size: 14px; font-weight: 500; }
+    .team-member .tasks-count { font-size: 12px; color: #999; }
+    .btn { padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; font-size: 13px; font-weight: 500; }
+    .btn-primary { background: #667eea; color: white; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>TaskMaster</h1>
+    <div class="user">
+      <span>Karan Khanna</span>
+      <div class="avatar">KK</div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="label">Total Tasks</div>
+        <div class="value">142</div>
+        <div class="change positive">+12% from last week</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Completed</div>
+        <div class="value">89</div>
+        <div class="change positive">+8% from last week</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">In Progress</div>
+        <div class="value">34</div>
+        <div class="change negative">-3% from last week</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Overdue</div>
+        <div class="value">7</div>
+        <div class="change negative">+2 since yesterday</div>
+      </div>
+    </div>
+
+    <div class="content-grid">
+      <div class="card">
+        <h2>Recent Tasks <span class="badge">5 new</span></h2>
+        <ul class="task-list">
+          <li>
+            <span class="dot high"></span>
+            <span class="title">Fix authentication timeout on mobile</span>
+            <span class="tag">Bug</span>
+            <span class="due">Due tomorrow</span>
+          </li>
+          <li>
+            <span class="dot high"></span>
+            <span class="title">Update payment gateway integration</span>
+            <span class="tag">Feature</span>
+            <span class="due">Due in 2 days</span>
+          </li>
+          <li>
+            <span class="dot medium"></span>
+            <span class="title">Refactor user service to use caching</span>
+            <span class="tag">Tech Debt</span>
+            <span class="due">Due next week</span>
+          </li>
+          <li>
+            <span class="dot medium"></span>
+            <span class="title">Add unit tests for analytics module</span>
+            <span class="tag">Testing</span>
+            <span class="due">Due in 5 days</span>
+          </li>
+          <li>
+            <span class="dot low"></span>
+            <span class="title">Update API documentation for v2</span>
+            <span class="tag">Docs</span>
+            <span class="due">Due in 2 weeks</span>
+          </li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="card" style="margin-bottom: 16px;">
+          <h2>Sprint Progress</h2>
+          <div style="text-align: center; margin: 16px 0;">
+            <div style="font-size: 48px; font-weight: 700; color: #667eea;">63%</div>
+            <div style="font-size: 13px; color: #999;">34 of 54 tasks completed</div>
+          </div>
+          <div class="progress-bar">
+            <div class="fill" style="width: 63%;"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Team Workload</h2>
+          <div class="team-member">
+            <div class="avatar-small">AK</div>
+            <div class="info">
+              <div class="name">Alice Kim</div>
+              <div class="tasks-count">8 active tasks</div>
+            </div>
+          </div>
+          <div class="team-member">
+            <div class="avatar-small">BJ</div>
+            <div class="info">
+              <div class="name">Bob Johnson</div>
+              <div class="tasks-count">6 active tasks</div>
+            </div>
+          </div>
+          <div class="team-member">
+            <div class="avatar-small">CS</div>
+            <div class="info">
+              <div class="name">Carol Smith</div>
+              <div class="tasks-count">5 active tasks</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
