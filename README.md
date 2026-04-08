@@ -1,6 +1,5 @@
 # GitHub Copilot Power Workshop
 
-
 ## Prerequisites
 
 ### Required
@@ -115,6 +114,56 @@ Expected response:
 | `npm test` | Run all Jest tests |
 | `npm run test:watch` | Run tests in watch mode |
 | `npm run lint` | Run ESLint on `src/` |
+| `npm run client:install` | Install React UI dependencies |
+| `npm run client:dev` | Start the React UI dev server (port 5173) |
+| `npm run dev:all` | Seed data + start React UI in one command |
+
+---
+
+## React UI (TaskMaster Frontend)
+
+A React + Tailwind dashboard that connects to the live API. It makes bugs **visible in the browser** -- pagination skips items, search misses results, stats show NaN -- giving you a visual feedback loop as you fix bugs.
+
+### Quick Start
+
+```bash
+# Terminal 1 -- Backend API (port 3000)
+npm run seed    # seed 15 tasks + 5 users
+npm run dev     # start Express with nodemon
+
+# Terminal 2 -- React UI (port 5173)
+npm run client:install   # one-time: install React dependencies
+npm run client:dev       # start Vite dev server
+```
+
+Then open **http://localhost:5173** in your browser.
+
+> The Vite dev server proxies `/api/*` and `/health` requests to `localhost:3000`, so no CORS issues.
+
+### Pages
+
+| Page | URL | What It Shows |
+|------|-----|---------------|
+| **Dashboard** | `/` | Stats grid, recent tasks, completion rate, team workload |
+| **Tasks** | `/tasks` | Full CRUD: paginated list, search, create/edit/delete |
+| **Users** | `/users` | User list, create, delete |
+| **Workshop Health** | `/health` | Automated bug detection -- tests the API for known bugs |
+
+### Workshop Health Tests
+
+The Workshop Health page runs automated checks against the API and shows pass/fail results:
+
+| Test | What It Checks |
+|------|---------------|
+| API Health | Server reachable, returns `{status: "ok"}` |
+| Pagination | Page 1 returns the correct first items |
+| Case-Insensitive Search | `search?q=fix` and `search?q=Fix` return same count |
+| Date Sorting | `/api/tasks/sorted` returns dates in ascending order |
+| Stats (No NaN) | `completionRate` is a finite number |
+| Analytics: Productivity | Endpoint returns real data (not stub) |
+| Analytics: Overdue | Endpoint returns real data (not stub) |
+
+Click **"Run All Tests"** to see which bugs are still present. Fix bugs in the backend and re-run to see them turn green.
 
 ---
 
@@ -122,6 +171,18 @@ Expected response:
 
 ```
 copilot-workshop/
+  client/                               -- React UI (Vite + Tailwind)
+    package.json                        -- Client dependencies
+    vite.config.js                      -- Dev proxy to localhost:3000
+    src/
+      App.jsx                           -- Router with 4 pages
+      api.js                            -- All fetch calls to the API
+      components/                       -- Reusable UI components
+      pages/
+        Dashboard.jsx                   -- Stats, recent tasks, team workload
+        Tasks.jsx                       -- Full CRUD with search & pagination
+        Users.jsx                       -- User list, create, delete
+        WorkshopHealth.jsx              -- Automated bug detection dashboard
   src/
     index.js                          -- Express app entry point (port 3000)
     seed.js                           -- Seed script with sample data
