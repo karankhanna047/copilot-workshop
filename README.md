@@ -1,4 +1,3 @@
-# GitHub Copilot Power Workshop
 
 
 ## Prerequisites
