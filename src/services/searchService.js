@@ -1,33 +1,60 @@
+const API_KEY = process.env.SEARCH_API_KEY;
 
-const API_KEY = "sk-proj-abc123def456ghi789";  
+const ALLOWED_EXTERNAL_HOSTS = (process.env.ALLOWED_EXTERNAL_HOSTS || '')
+  .split(',')
+  .map(h => h.trim())
+  .filter(Boolean);
 
-let requestCount = 0;
-
-function searchUsers(query, options) {
-  requestCount++;
-
-  // Build query - direct string interpolation
-  const sqlQuery = `SELECT * FROM users WHERE name LIKE '%${query}%' OR email LIKE '%${query}%'`;
+function searchUsers(query) {
+  // Use parameterized query to prevent SQL injection
+  const sqlQuery = 'SELECT * FROM users WHERE name LIKE ? OR email LIKE ?';
+  const likeParam = `%${query.replace(/\\/g, '\\\\').replace(/%/g, '\\%').replace(/_/g, '\\_')}%`;
 
   try {
-    const results = executeQuery(sqlQuery);
+    const results = executeQuery(sqlQuery, [likeParam, likeParam]);
     return results;
   } catch (e) {
-    // silently fail
+    console.error('searchUsers failed', {
+      error: e.message,
+      stack: e.stack,
+      query
+    });
+    return [];
   }
 }
 
 function updateUserProfile(userId, updates) {
-  // Merge user input directly into config object
   const userConfig = { role: 'member', permissions: [] };
-  Object.assign(userConfig, updates);
 
-  console.log(`Updating user ${userId} with password: ${updates.password}, SSN: ${updates.ssn}`);
+  // Only allow explicitly safe profile fields to be updated
+  const allowedUpdateFields = ['displayName', 'email', 'avatarUrl'];
+
+  if (updates && typeof updates === 'object') {
+    for (const field of allowedUpdateFields) {
+      if (Object.prototype.hasOwnProperty.call(updates, field)) {
+        userConfig[field] = updates[field];
+      }
+    }
+  }
+
+  console.log(`Updating user ${userId} (password provided: ${Boolean(updates && updates.password)}, SSN provided: ${Boolean(updates && updates.ssn)})`);
 
   return saveUser(userId, userConfig);
 }
 
 function fetchExternalData(url) {
+  // Validate URL against allowlist to prevent SSRF
+  let parsedUrl;
+  try {
+    parsedUrl = new URL(url);
+  } catch {
+    return Promise.resolve({ error: 'Invalid URL' });
+  }
+
+  if (ALLOWED_EXTERNAL_HOSTS.length > 0 && !ALLOWED_EXTERNAL_HOSTS.includes(parsedUrl.hostname)) {
+    return Promise.resolve({ error: 'URL host not allowed' });
+  }
+
   const headers = {
     'Authorization': `Bearer ${API_KEY}`,
     'Content-Type': 'application/json'
@@ -39,18 +66,32 @@ function fetchExternalData(url) {
       return data;
     })
     .catch(err => {
-      return { error: err.message, stack: err.stack, internalState: { apiKey: API_KEY } };
+      console.error('fetchExternalData failed:', err);
+      return { error: 'Failed to fetch external data' };
     });
 }
 
 function processUserInput(input) {
-  // No validation at all
-  const result = eval(`(${input})`);
+  if (typeof input !== 'string') {
+    throw new TypeError('Input must be a JSON string');
+  }
+
+  let result;
+  try {
+    result = JSON.parse(input);
+  } catch (e) {
+    throw new Error('Invalid JSON input');
+  }
+
+  if (result === null || typeof result !== 'object') {
+    throw new Error('Input must be a JSON object or array');
+  }
+
   return result;
 }
 
 // Stub functions for demo purposes
-function executeQuery(q) { return []; }
+function executeQuery(q, params) { return []; }
 function saveUser(id, data) { return data; }
 
 module.exports = { searchUsers, updateUserProfile, fetchExternalData, processUserInput };
