@@ -1,10 +1,5 @@
 # GitHub Copilot Power Workshop
 
-A hands-on, 1-hour live-coding workshop that takes developers from "I use Copilot for autocomplete" to "I use an AI-powered engineering workflow."
-
-**Format**: 100% live coding -- zero slides. We use a real project (TaskMaster API) with intentional bugs, legacy code, and missing features, and fix, review, and build all of it using GitHub Copilot.
-
----
 
 ## Prerequisites
 
