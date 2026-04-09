@@ -32,6 +32,58 @@ npm test
 # - You should get a response
 ```
 
+## Installing Node.js on Windows (Without Admin Rights)
+
+If you don't have administrator privileges on your Windows machine, you can install Node.js using the standalone binary:
+
+### Step 1: Download the Standalone Binary
+1. Go to https://nodejs.org/en/download
+2. Scroll down to find **"Windows Binary (.zip)"** under the download options
+3. Download the appropriate version:
+   - **64-bit**: `node-vxx.x.x-win-x64.zip` (most common)
+
+### Step 2: Extract and Place Files
+1. Right-click the downloaded `.zip` file and select **Extract All...**
+2. Choose an extraction location you have write access to, such as:
+   - `C:\Users\<YourUsername>\nodejs`
+   - Or any folder in your user directory
+3. Note the full path to the extracted folder (e.g., `C:\Users\YourName\nodejs`)
+
+### Step 3: Add Node.js to Your User PATH
+1. Open **Control Panel**:
+   - Press **Windows Key**, type **"Control Panel"**, and press Enter
+2. Navigate to environment variables:
+   - Click **User Accounts**
+   - Click **User Accounts** again
+   - Click **Change my environment variables** (this doesn't require admin)
+3. In the **User variables** section (top half), find and select the **Path** variable
+4. Click **Edit...**
+5. Click **New**
+6. Paste the full path to your Node.js folder (e.g., `C:\Users\YourName\nodejs`)
+7. Click **OK** on all dialogs to save
+
+### Step 4: Restart and Verify Installation
+1. **Close all open Command Prompt and PowerShell windows**
+2. **Close and restart VS Code** (important - it needs to reload environment variables)
+3. Open a new Command Prompt or PowerShell window
+4. Test the installation by running:
+   ```bash
+   node --version
+   ```
+   You should see output like: `v18.x.x`
+5. Test npm (Node Package Manager):
+   ```bash
+   npm --version
+   ```
+   You should see output like: `9.x.x`
+
+### Troubleshooting
+- If `node --version` still doesn't work after restarting:
+  - Double-check the PATH was added correctly (repeat Step 3)
+  - Make sure you fully closed and reopened your terminal/VS Code
+  - Verify the folder path contains `node.exe` and `npm.cmd`
+- If npm doesn't work but node does, make sure the PATH points to the main folder (not a subfolder)
+
 ## If Copilot Isn't Working
 1. Check the status bar icon (bottom right) -- click it to verify subscription
 2. Try signing out and back in via the Accounts icon
